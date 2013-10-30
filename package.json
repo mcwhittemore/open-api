@@ -1,9 +1,38 @@
 {
-  "name": "default",
+  "name": "open-api",
   "devDependencies": {
     "node-hooks": "0.0.15",
     "dont-commit-conflicts.hks": "0.0.0",
     "esprima.hks": "0.0.0",
-    "beautify.hks": "0.0.3"
+    "beautify.hks": "0.0.3",
+    "mocha": "1.13.0"
+  },
+  "description": "An opinionated API server that forces versioning, simplifies deprecation and encourages documentation.",
+  "version": "0.0.0",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "connect": "~2.11.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mcwhittemore/open-api.git"
+  },
+  "keywords": [
+    "api",
+    "connect",
+    "deprecation",
+    "versioning",
+    "express"
+  ],
+  "author": "Matthew Chase Whittemore <mcwhittemore@gmail.com>",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/mcwhittemore/open-api/issues"
   }
 }
