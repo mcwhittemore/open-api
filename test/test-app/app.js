@@ -7,6 +7,12 @@ require("./endpoints/0.1.js")(api.version({
     envs: ["dev"]
 }));
 
+require("./endpoints/0.2.js")(api.version({
+    name: "0.2",
+    inDocs: true,
+    envs: ["dev"]
+}));
+
 api.use(function(req, res, next) {
     res.end("END OF THE LINE");
 });
