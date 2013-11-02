@@ -3,12 +3,18 @@ var api = openApi();
 
 require("./endpoints/0.1.js")(api.version({
     name: "0.1",
-    inDocs: false,
+    inDocs: true,
     envs: ["dev"]
 }));
 
 require("./endpoints/0.2.js")(api.version({
     name: "0.2",
+    inDocs: true,
+    envs: ["dev"]
+}));
+
+require("./endpoints/0.3.js")(api.version({
+    name: "0.3",
     inDocs: true,
     envs: ["dev"]
 }));

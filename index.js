@@ -38,7 +38,8 @@ module.exports = function(apiOpts) {
         req.query = urlParts[1] ? querystring.parse(urlParts[1]) : {};
 
         if (typeof versionNumberMappedToName[parts[0]] != "undefined") {
-            var routeName = "api/" + req.method.toLowerCase() + "/" + parts.slice(1).join("/");
+            var method = req.method == "DELETE" ? "del" : req.method.toLowerCase();
+            var routeName = "api/" + method + "/" + parts.slice(1).join("/");
             var versionId = versionNumberMappedToName[parts[0]];
             var version = versions[versionId];
             var acceptedRoute = version.router(routeName, "api", req, res, next);
@@ -46,7 +47,11 @@ module.exports = function(apiOpts) {
             var routeName = apiOpts.docsPath + "/" + parts.slice(2).join("/");
             var versionId = versionNumberMappedToName[parts[1]];
             var version = versions[versionId];
-            var acceptedRoute = version.router(routeName, "docs", req, res, next);
+            if (version.inDocs) {
+                var acceptedRoute = version.router(routeName, "docs", req, res, next);
+            } else {
+                next();
+            }
         } else {
             next();
         }
