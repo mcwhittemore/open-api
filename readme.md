@@ -19,8 +19,8 @@ var v2 = api.version({
 ## Data Validation
 
 ```
-v1.addType(
-	"data-type-name",
+v1.addValidator(
+	"data-validator-name",
 	"desc for docs",
 	"example for docs", 
 	function(value){ 
@@ -33,8 +33,8 @@ v1.addType(
 
 ```
 var opts = {
-	request: "data-type-name",
-	response: "data-type-name",
+	request: "data-validator-name",
+	response: "data-validator-name",
 	desc: "Some explanation for the docs"
 }
 
