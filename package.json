@@ -14,7 +14,8 @@
     "test": "test"
   },
   "dependencies": {
-    "connect": "~2.11.0"
+    "connect": "~2.11.0",
+    "colors": "~0.6.2"
   },
   "scripts": {
     "test": "mocha"
