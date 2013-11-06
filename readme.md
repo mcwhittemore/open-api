@@ -33,8 +33,10 @@ v1.addValidator(
 
 ```
 var opts = {
-	request: "data-validator-name",
-	response: "data-validator-name",
+	validate: {
+		request: "data-validator-name",
+		response: "data-validator-name"
+	},
 	desc: "Some explanation for the docs"
 }
 
@@ -59,8 +61,10 @@ var v1 = api.version({
 
 //add an endpoint
 v1.get("foo", {
-    request: "empty",
-    response: "object",
+    validate: {
+    	request: "empty",
+    	response: "object"
+    },
     desc: "Returns the message foo"
 }, function(req, res) {
     res.json({"message":"foo"});
@@ -74,8 +78,10 @@ var v2 = api.version({
 
 //add another endpoint
 v2.get("bar", {
-    request: "empty",
-    response: "object",
+    validate: {
+    	request: "empty",
+    	response: "object"
+    },
     desc: "Returns the message bar"
 }, function(req, res) {
     res.json({"message":"bar"});
