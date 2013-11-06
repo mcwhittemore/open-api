@@ -1,0 +1,17 @@
+<div class="col-md-3">
+	<h3>Routes</h3>
+	<ul class="nav nav-pills nav-stacked">
+		<% for(var i=0; i<routes.length; i++){ %>
+			<li <% if(routes[i].isActive){ %>class="active" } <% } %> >
+				<a href="<%- routes[i].url%>">
+					<%- routes[i].route %>
+				</a>
+			</li>
+		<% } %>
+	</ul>	
+</div>
+<div class="col-md-9">
+	<div class="page-header">
+    	<h1><%- route %></h1>
+    </div>
+</div>

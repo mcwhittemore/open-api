@@ -1,7 +1,7 @@
 var querystring = require("querystring");
 var connect = require("connect");
 var version = require("./lib/version");
-
+var ejs = require("ejs");
 
 module.exports = function(apiOpts) {
 
@@ -24,6 +24,17 @@ module.exports = function(apiOpts) {
 
     //adding in express' res.json function
     api.use(require("./lib/express-response"));
+    api.use(function(req, res, next) {
+        res.render = function(file, data, cb) {
+            //TODO: Make this not force ejs
+            //TODO: Have this send the data is no cb
+            //TODO: Have this take a status code
+            ejs.renderFile(file, {
+                locals: data
+            }, cb);
+        }
+        next();
+    });
 
     var versions = [];
     var versionNumberMappedToName = {};
@@ -31,6 +42,11 @@ module.exports = function(apiOpts) {
     api.use(function(req, res, next) {
 
         var urlParts = req.url.split("?");
+
+        var type = req.url.match(/\.[\w]*$/);
+        if (type) {
+            req.type = type[0].replace(".", "");
+        }
 
         var path = urlParts[0];
         var parts = path.split("/").slice(1);
