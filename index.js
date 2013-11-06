@@ -8,6 +8,7 @@ module.exports = function(apiOpts) {
     process.NODE_ENV = process.NODE_ENV || 'development';
 
     apiOpts = apiOpts || {};
+    apiOpts.name = apiOpts.name || "Unnamed API";
     apiOpts.publicFolder = apiOpts.publicFolder || 'public';
     apiOpts.logEnv = apiOpts.logEnv || 'development';
     apiOpts.docsPath = apiOpts.docsPath || 'docs';
@@ -80,6 +81,7 @@ module.exports = function(apiOpts) {
     });
 
     api.version = function(verOpts) {
+        verOpts.api_name = apiOpts.name;
         verOpts.docsPath = apiOpts.docsPath;
         verOpts.strictMatching = apiOpts.strictMatching;
         verOpts.caseSensitive = apiOpts.caseSensitive;
