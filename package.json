@@ -17,7 +17,8 @@
     "connect": "~2.11.0",
     "colors": "~0.6.2",
     "ejs": "~0.8.4",
-    "methods": "~0.1.0"
+    "methods": "~0.1.0",
+    "routes": "~0.2.0"
   },
   "scripts": {
     "test": "mocha"
