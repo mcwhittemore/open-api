@@ -18,7 +18,8 @@
     "colors": "~0.6.2",
     "ejs": "~0.8.4",
     "methods": "~0.1.0",
-    "routes": "~0.2.0"
+    "routes": "~0.2.0",
+    "context-error": "0.0.1"
   },
   "scripts": {
     "test": "mocha"
