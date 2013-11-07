@@ -4,8 +4,8 @@
 	</div>
 	<ul class="nav nav-pills nav-stacked">
 		<% for(var i=0; i<index.length; i++){ %>
-			<li <% if(index[i].isActive){ %>class="active" } <% } %> >
-				<a href="<%- index[i].url%>">
+			<li <% if(index[i].isCurrentPage){ %>class="active" } <% } %> >
+				<a href="<%-version_docs_path %>/<%- index[i].route%>">
 					<%- index[i].route %>
 				</a>
 			</li>
@@ -14,6 +14,42 @@
 </div>
 <div class="col-md-9">
 	<div class="page-header">
-    	<h1><%- route_title %></h1>
+    	<h1>/<%- route_title %></h1>
+    </div>
+    <div>
+    	<% var methodList = Object.keys(methods); %>
+    	<% for(var i=0; i<methodList.length; i++){ %>
+    		<% var details = methods[methodList[i]]; %>
+    		<h2> <%- methodList[i].toUpperCase() %> </h2>
+    		<p>  <%- details.desc %> </p>
+		    
+		    <% if(details.params){ %>
+		    	<h3> URL Parameters </h3>
+	    		<p> <%- details.params.desc %> </p>
+	    		<% if(details.params.example!="") { %>
+		    		<div class="well">
+		    			<%- details.params.example %>
+		    		</div>
+		    	<% } %>
+		    <% } %>
+
+    		<h3> Request </h3>
+    		<p> <%- details.request.desc %> </p>
+    		<% if(details.request.example!="") { %>
+	    		<div class="well">
+	    			<%- details.request.example %>
+	    		</div>
+	    	<% } %>
+
+	    	<% if(details.response){ %>
+		    	<h3> Response </h3>
+	    		<p> <%- details.response.desc %> </p>
+	    		<% if(details.response.example!="") { %>
+		    		<div class="well">
+		    			<%- details.response.example %>
+		    		</div>
+		    	<% } %>
+		    <% } %>
+    	<% } %>
     </div>
 </div>
