@@ -1,4 +1,5 @@
 var connect = require("connect");
+var path = require("path");
 var version = require("./lib/version");
 var querystring = require("querystring");
 var ejs = require("ejs");
@@ -39,8 +40,6 @@ module.exports = function(apiOpts) {
             req.mimetype = "default";
         }
 
-        console.log(req.path, req.mimetype);
-
         req.query = urlParts[1] ? querystring.parse(urlParts[1]) : {};
 
         next();
@@ -51,13 +50,47 @@ module.exports = function(apiOpts) {
     //adding in express' res.json function
     api.use(require("./lib/express-response"));
     api.use(function(req, res, next) {
-        res.render = function(file, data, cb) {
-            //TODO: Make this not force ejs
-            //TODO: Have this send the data is no cb
-            //TODO: Have this take a status code
-            ejs.renderFile(file, {
+        res.render = function(files, data, cb) {
+            if (typeof files === "string") {
+                files = [files];
+            }
+
+            var compile = function(i, html) {
+                if (i < 0) {
+                    sendit(null, html);
+                } else {
+                    data.__yeild = html;
+                    ejs.renderFile(files[i], {
+                        locals: data
+                    }, function(err, html) {
+                        if (err) {
+                            sendit(err)
+                        } else {
+                            compile(i - 1, html);
+                        }
+                    });
+                }
+            }
+
+            var sendit = function(err, html) {
+                if (cb) {
+                    cb(err, html);
+                } else if (err) {
+                    res.end(err);
+                } else {
+                    res.end(html);
+                }
+            }
+
+            ejs.renderFile(files[files.length - 1], {
                 locals: data
-            }, cb);
+            }, function(err, html) {
+                if (err) {
+                    sendit(err)
+                } else {
+                    compile(files.length - 2, html);
+                }
+            });
         }
         next();
     });
@@ -116,7 +149,31 @@ module.exports = function(apiOpts) {
             }
 
             if (ver.isActive() && ver.inDocs) {
-                res.json(ver.name);
+                var data = {}
+                data.page_title = ver.name;
+                data.api_title = ver.api_name;
+                data.index = [];
+                for (var i = 0; i < versions.length; i++) {
+                    if (versions[i].isActive() && versions[i].inDocs) {
+                        data.index.push({
+                            name: "Version " + versions[i].name,
+                            url: "/" + apiOpts.docsPath + "/" + versions[i].name + "/",
+                            isCurrentPage: ver.name == versions[i].name
+                        });
+                    }
+                }
+
+                if (req.mimetype == "json") {
+                    res.json(data);
+                } else {
+
+                    var layoutFile = path.join(__dirname, "./ejs/layout.ejs");
+                    var menuFile = path.join(__dirname, "./ejs/with-menu.ejs");
+                    var routeFile = path.join(__dirname, "./ejs/version.ejs");
+
+                    res.render([layoutFile, menuFile, routeFile], data);
+                }
+
             } else {
                 next();
             }
@@ -140,7 +197,7 @@ module.exports = function(apiOpts) {
     /** ==================== INIT BASE DOCS ROUTE ==================== **/
 
     api.get("/" + apiOpts.docsPath, function(req, res) {
-        res.json("docs");
+
     });
 
 
