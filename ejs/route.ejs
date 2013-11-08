@@ -9,7 +9,7 @@
 		<h2> <%- methodList[i].toUpperCase() %> </h2>
 		<p>  <%- details.desc %> </p>
 	    
-	    <% if(details.params){ %>
+	    <% if(details.params && details.params.name!="auto-pass"){ %>
 	    	<h3> URL Parameters </h3>
     		<p> <%- details.params.desc %> </p>
     		<% if(details.params.example!="") { %>
