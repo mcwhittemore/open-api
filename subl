@@ -1,0 +1,91 @@
+diff --git a/ejs/route.ejs b/ejs/route.ejs
+index d61b5b9..8494d47 100644
+--- a/ejs/route.ejs
++++ b/ejs/route.ejs
+@@ -19,15 +19,17 @@
+ 	    	<% } %>
+ 	    <% } %>
+ 
+-		<h3> Request </h3>
+-		<p> <%- details.request.desc %> </p>
+-		<% if(details.request.example!="") { %>
+-    		<div class="well">
+-    			<%- details.request.example %>
+-    		</div>
+-    	<% } %>
++	    <% if(details.request.name!="auto-pass"){ %>
++			<h3> Request </h3>
++			<p> <%- details.request.desc %> </p>
++			<% if(details.request.example!="") { %>
++	    		<div class="well">
++	    			<%- details.request.example %>
++	    		</div>
++	    	<% } %>
++	    <% } %>
+ 
+-    	<% if(details.response){ %>
++    	<% if(details.response && details.response.name!="auto-pass"){ %>
+ 	    	<h3> Response </h3>
+     		<p> <%- details.response.desc %> </p>
+     		<% if(details.response.example!="") { %>
+diff --git a/lib/controllerify.js b/lib/controllerify.js
+index 6a191ca..25f6374 100644
+--- a/lib/controllerify.js
++++ b/lib/controllerify.js
+@@ -1,6 +1,6 @@
+ module.exports = function(requestType, paramsType, responseType, controller) {
+     return function(req, res, next) {
+-        if (requestType.isValid(req, res) && paramsType(req, res)) {
++        if (requestType.isValid(req, res) && paramsType.isValid(req, res)) {
+             controller(req, res, next);
+         } else {
+             res.json({
+diff --git a/lib/doc-viewmodel.js b/lib/doc-viewmodel.js
+index 74a481d..0ac9fb9 100644
+--- a/lib/doc-viewmodel.js
++++ b/lib/doc-viewmodel.js
+@@ -24,6 +24,10 @@ module.exports = function(req, ver) {
+         }
+     }
+ 
++    data.routes.sort(function(a, b){
++        return a.name.localeCompare(b.name);
++    });
++
+     data.api_title = ver.api_name;
+     data.version_title = req.version;
+ 
+diff --git a/lib/version.js b/lib/version.js
+index ec24064..6d39e02 100644
+--- a/lib/version.js
++++ b/lib/version.js
+@@ -131,7 +131,7 @@ module.exports = function(api, parent, verOpts) {
+         } else if (parent) {
+             return parent.getValidator(name);
+         } else {
+-            throw new Error("Invalid Validator: " + name);
++            throw ContextError("Invalid Validator: " + name, 5);
+         }
+     }
+ 
+@@ -177,7 +177,6 @@ module.exports = function(api, parent, verOpts) {
+                 if (oldEndpoint == undefined) {
+                     throw ContextError("Controller, opts.validate.request and opts.validate.response are required when defineing a new endpoint", 4);
+                 } else {
+-                    console.log(oldEndpoint);
+                     opts.validate.request = opts.validate.request || oldEndpoint.validate.request;
+                     opts.validate.response = opts.validate.response || oldEndpoint.validate.response;
+                     opts.controller = opts.controller || oldEndpoint.controller;
+diff --git a/package.json b/package.json
+index 0cae6bc..67cd0b2 100644
+--- a/package.json
++++ b/package.json
+@@ -7,7 +7,7 @@
+     "beautify.hks": "0.0.3",
+     "mocha": "1.13.0"
+   },
+-  "description": "An opinionated API server that forces versioning, simplifies deprecation and encourages documentation.",
++  "description": "An api framework that forces versioning, simplifies data validation, and automates documentation.",
+   "version": "0.0.0",
+   "main": "index.js",
+   "directories": {

@@ -19,15 +19,17 @@
 	    	<% } %>
 	    <% } %>
 
-		<h3> Request </h3>
-		<p> <%- details.request.desc %> </p>
-		<% if(details.request.example!="") { %>
-    		<div class="well">
-    			<%- details.request.example %>
-    		</div>
-    	<% } %>
+	    <% if(details.request.name!="auto-pass"){ %>
+			<h3> Request </h3>
+			<p> <%- details.request.desc %> </p>
+			<% if(details.request.example!="") { %>
+	    		<div class="well">
+	    			<%- details.request.example %>
+	    		</div>
+	    	<% } %>
+	    <% } %>
 
-    	<% if(details.response){ %>
+    	<% if(details.response && details.response.name!="auto-pass"){ %>
 	    	<h3> Response </h3>
     		<p> <%- details.response.desc %> </p>
     		<% if(details.response.example!="") { %>

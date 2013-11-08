@@ -7,7 +7,7 @@
     "beautify.hks": "0.0.3",
     "mocha": "1.13.0"
   },
-  "description": "An opinionated API server that forces versioning, simplifies deprecation and encourages documentation.",
+  "description": "An api framework that forces versioning, simplifies data validation, and automates documentation.",
   "version": "0.0.0",
   "main": "index.js",
   "directories": {
