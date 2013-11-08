@@ -59,6 +59,15 @@
 					<div class="navbar-header">
 						<a class="navbar-brand" href="/docs"><%- api_title %></a>
 					</div>
+					<div class="navbar-collapse collapse">
+		    			<ul class="nav navbar-nav">
+    						<% for(var i=0; i<versions.length; i++){ %>
+    							<li <% if(versions[i].isCurrentPage){ %> class="active" <% } %> >
+    								<a href="<%-versions[i].url%>"><%-versions[i].name%></a>
+    							</li>
+    						<% } %>
+		    			</ul>
+		    		</div>
 				</div><!-- /.container -->
 		    </div>
 			<div class="container">

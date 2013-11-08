@@ -2,10 +2,10 @@ var connect = require("connect");
 var path = require("path");
 var version = require("./lib/version");
 var querystring = require("querystring");
-var ejs = require("ejs");
 var router = require("routes");
 var methods = require("methods");
 var numMethods = methods.length;
+var docViewModel = require("./lib/doc-viewmodel");
 
 module.exports = function(apiOpts) {
 
@@ -26,7 +26,7 @@ module.exports = function(apiOpts) {
     api.use(connect.cookieParser());
     api.use(connect.static(apiOpts.publicFolder));
 
-    /** =========================== ADD PATH, MIMETYPE, QUERY =========================== **/
+    /** =========================== ADD PATH, MIMETYPE, QUERY ============================ **/
 
     api.use(function(req, res, next) {
         var urlParts = req.url.split("?");
@@ -45,57 +45,13 @@ module.exports = function(apiOpts) {
         next();
     });
 
-    /** =========================== ADD SEND =========================== **/
+    /** ========================== ADD RES.JSON AND RES.RENDER ========================== **/
 
     //adding in express' res.json function
     api.use(require("./lib/express-response"));
-    api.use(function(req, res, next) {
-        res.render = function(files, data, cb) {
-            if (typeof files === "string") {
-                files = [files];
-            }
+    api.use(require("ejs-list-render").connect);
 
-            var compile = function(i, html) {
-                if (i < 0) {
-                    sendit(null, html);
-                } else {
-                    data.__yeild = html;
-                    ejs.renderFile(files[i], {
-                        locals: data
-                    }, function(err, html) {
-                        if (err) {
-                            sendit(err)
-                        } else {
-                            compile(i - 1, html);
-                        }
-                    });
-                }
-            }
-
-            var sendit = function(err, html) {
-                if (cb) {
-                    cb(err, html);
-                } else if (err) {
-                    res.end(err);
-                } else {
-                    res.end(html);
-                }
-            }
-
-            ejs.renderFile(files[files.length - 1], {
-                locals: data
-            }, function(err, html) {
-                if (err) {
-                    sendit(err)
-                } else {
-                    compile(files.length - 2, html);
-                }
-            });
-        }
-        next();
-    });
-
-    /** ========================== ADD ROUTER ========================== **/
+    /** ================================== ADD ROUTER =================================== **/
 
     var routes = {};
     methods.forEach(function(name) {
@@ -116,18 +72,42 @@ module.exports = function(apiOpts) {
         }
     });
 
-    /** ========================= ADD VERSION ========================= **/
+    /** ================================== ADD VERSION ================================= **/
 
-    var versions = [];
+    api.versions = [];
     var versionNumberMappedToName = {};
+
+    var versionRender = function(req, res, ver) {
+        req.version = ver.name;
+
+        if (req.mimetype == "default") {
+            req.mimetype = "html";
+        }
+
+        var data = docViewModel(req, ver);
+        data.page_title = ver.name;
+
+        data.desc = ver.desc;
+
+        if (req.mimetype == "json") {
+            res.json(data);
+        } else {
+
+            var layoutFile = path.join(__dirname, "./ejs/layout.ejs");
+            var menuFile = path.join(__dirname, "./ejs/with-menu.ejs");
+            var routeFile = path.join(__dirname, "./ejs/version.ejs");
+
+            res.render([layoutFile, menuFile, routeFile], data);
+        }
+    }
 
     api.version = function(verOpts) {
         verOpts.api_name = apiOpts.name;
         verOpts.docsPath = apiOpts.docsPath;
-        var parent = versions.length != 0 ? versions[versions.length - 1] : null;
+        var parent = api.versions.length != 0 ? api.versions[api.versions.length - 1] : null;
         var ver = version(api, parent, verOpts);
-        versions.push(ver);
-        versionNumberMappedToName[ver.name] = versions.length - 1;
+        api.versions.push(ver);
+        versionNumberMappedToName[ver.name] = api.versions.length - 1;
 
         methods.forEach(function(name) {
             routes[name].addRoute("/" + ver.name + "/*", function(req, res, next) {
@@ -144,47 +124,18 @@ module.exports = function(apiOpts) {
         });
 
         routes["get"].addRoute("/" + apiOpts.docsPath + "/" + ver.name, function(req, res, next) {
-            if (req.mimetype == "default") {
-                req.mimetype = "html";
-            }
-
             if (ver.isActive() && ver.inDocs) {
-                var data = {}
-                data.page_title = ver.name;
-                data.api_title = ver.api_name;
-                data.index = [];
-                for (var i = 0; i < versions.length; i++) {
-                    if (versions[i].isActive() && versions[i].inDocs) {
-                        data.index.push({
-                            name: "Version " + versions[i].name,
-                            url: "/" + apiOpts.docsPath + "/" + versions[i].name + "/",
-                            isCurrentPage: ver.name == versions[i].name
-                        });
-                    }
-                }
-
-                if (req.mimetype == "json") {
-                    res.json(data);
-                } else {
-
-                    var layoutFile = path.join(__dirname, "./ejs/layout.ejs");
-                    var menuFile = path.join(__dirname, "./ejs/with-menu.ejs");
-                    var routeFile = path.join(__dirname, "./ejs/version.ejs");
-
-                    res.render([layoutFile, menuFile, routeFile], data);
-                }
-
+                versionRender(req, res, ver);
             } else {
                 next();
             }
         });
 
         routes["get"].addRoute("/" + apiOpts.docsPath + "/" + ver.name + "/*", function(req, res, next) {
-            if (req.mimetype == "default") {
-                req.mimetype = "html";
-            }
-
             if (ver.isActive() && ver.inDocs) {
+                if (req.mimetype == "default") {
+                    req.mimetype = "html";
+                }
                 ver.router(req.splats, "docs", req, res, next);
             } else {
                 next();
@@ -194,10 +145,22 @@ module.exports = function(apiOpts) {
         return ver;
     }
 
-    /** ==================== INIT BASE DOCS ROUTE ==================== **/
+    /** ============================== INIT BASE DOCS ROUTE ============================== **/
 
-    api.get("/" + apiOpts.docsPath, function(req, res) {
+    api.get("/" + apiOpts.docsPath, function(req, res, next) {
+        var ver = undefined;
+        for (var i = api.versions.length - 1; i >= 0; i--) {
+            if (api.versions[i].isActive() && api.versions[i].inDocs) {
+                ver = api.versions[i];
+                break;
+            }
+        }
 
+        if (ver) {
+            versionRender(req, res, ver);
+        } else {
+            next();
+        }
     });
 
 

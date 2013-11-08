@@ -3,10 +3,10 @@
 		<h1>Routes</h1>
 	</div>
 	<ul class="nav nav-pills nav-stacked">
-		<% for(var i=0; i<index.length; i++){ %>
-			<li <% if(index[i].isCurrentPage){ %>class="active" } <% } %> >
-				<a href="<%- index[i].url%>">
-					<%- index[i].name %>
+		<% for(var i=0; i<routes.length; i++){ %>
+			<li <% if(routes[i].isCurrentPage){ %>class="active" } <% } %> >
+				<a href="<%- routes[i].url%>">
+					<%- routes[i].name %>
 				</a>
 			</li>
 		<% } %>
