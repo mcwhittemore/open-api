@@ -47,13 +47,13 @@ module.exports = function(ver)
             }, function(req, res)
             {
                         res.json([
-                        {
-                                    id: 1,
-                                    name: "a"
+                                    {
+                                                id: 1,
+                                                name: "a"
                         },
-                        {
-                                    id: 2,
-                                    name: "b"
+                                    {
+                                                id: 2,
+                                                name: "b"
                         }]);
             });
 
