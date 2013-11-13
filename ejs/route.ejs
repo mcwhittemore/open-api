@@ -11,32 +11,17 @@
 	    
 	    <% if(details.params && details.params.name!="auto-pass"){ %>
 	    	<h3> URL Parameters </h3>
-    		<p> <%- details.params.desc %> </p>
-    		<% if(details.params.example!="") { %>
-	    		<div class="well">
-	    			<%- details.params.example %>
-	    		</div>
-	    	<% } %>
+    		<div> <%- details.params.desc %> </div>
 	    <% } %>
 
 	    <% if(details.request.name!="auto-pass"){ %>
 			<h3> Request </h3>
-			<p> <%- details.request.desc %> </p>
-			<% if(details.request.example!="") { %>
-	    		<div class="well">
-	    			<%- details.request.example %>
-	    		</div>
-	    	<% } %>
+			<div> <%- details.request.desc %> </div>
 	    <% } %>
 
     	<% if(details.response && details.response.name!="auto-pass"){ %>
 	    	<h3> Response </h3>
-    		<p> <%- details.response.desc %> </p>
-    		<% if(details.response.example!="") { %>
-	    		<div class="well">
-	    			<%- details.response.example %>
-	    		</div>
-	    	<% } %>
+    		<div> <%- details.response.desc %> </div>
 	    <% } %>
 	<% } %>
 </div>
