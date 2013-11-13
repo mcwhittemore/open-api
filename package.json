@@ -18,7 +18,8 @@
     "methods": "~0.1.0",
     "routes": "~0.2.0",
     "context-error": "0.0.1",
-    "ejs-list-render": "0.0.0"
+    "ejs-list-render": "0.0.0",
+    "marked": "~0.2.10"
   },
   "scripts": {
     "test": "mocha"
