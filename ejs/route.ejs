@@ -6,7 +6,7 @@
 	<% var methodList = Object.keys(methods); %>
 	<% for(var i=0; i<methodList.length; i++){ %>
 		<% var details = methods[methodList[i]]; %>
-		<h2> <%- methodList[i].toUpperCase() %> </h2>
+		<h2> <%- methodList[i].toUpperCase() %> <small>HTTP METHOD</small></h2>
 		<p>  <%- details.desc %> </p>
 	    
 	    <% if(details.params && details.params.name!="auto-pass"){ %>

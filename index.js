@@ -116,7 +116,9 @@ module.exports = function(apiOpts) {
                 }
 
                 if (ver.isActive()) {
-                    ver.router(name + "/" + req.splats, "api", req, res, next);
+                    req.isDocs = false;
+                    req.route = name + "/" + req.splats;
+                    ver.router(req, res, next);
                 } else {
                     next();
                 }
@@ -133,10 +135,12 @@ module.exports = function(apiOpts) {
 
         routes["get"].addRoute("/" + apiOpts.docsPath + "/" + ver.name + "/*", function(req, res, next) {
             if (ver.isActive() && ver.inDocs) {
+                req.isDocs = true;
+                req.route = req.splats;
                 if (req.mimetype == "default") {
                     req.mimetype = "html";
                 }
-                ver.router(req.splats, "docs", req, res, next);
+                ver.router(req, res, next);
             } else {
                 next();
             }
