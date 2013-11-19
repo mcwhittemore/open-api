@@ -5,8 +5,10 @@ module.exports = function(ver) {
     });
 
     ver.post("users", {
-        request: "empty-body",
-        response: "empty-body",
+        validate: {
+            request: "empty-body",
+            response: "empty-body",
+        },
         desc: "Create a new user"
     }, function(req, res) {
         res.json({
@@ -16,8 +18,10 @@ module.exports = function(ver) {
     });
 
     ver.get("users/:id", {
-        request: "empty-body",
-        response: "empty-body",
+        validate: {
+            request: "empty-body",
+            response: "empty-body",
+        },
         desc: "Get info about a single user"
     }, function(req, res) {
         res.json({
@@ -27,8 +31,10 @@ module.exports = function(ver) {
     });
 
     ver.post("users/:id", {
-        request: "empty-body",
-        response: "empty-body",
+        validate: {
+            request: "empty-body",
+            response: "empty-body",
+        },
         desc: "Update a user"
     }, function(req, res) {
         res.json({

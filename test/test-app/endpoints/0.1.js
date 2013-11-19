@@ -1,6 +1,6 @@
 module.exports = function(ver) {
 
-    ver.addValidator("user", "The available details of a user", "coming soon", function(value) {
+    ver.addValidator("user", "The available details of a user", function(value) {
         if (typeof value.id != "number") {
             return false;
         } else if (typeof value.name == undefined) {
@@ -10,7 +10,7 @@ module.exports = function(ver) {
         }
     });
 
-    ver.addValidator("user-list", "A List of User Objects", "coming soon", function(value) {
+    ver.addValidator("user-list", "A List of User Objects", function(value) {
         var userValidator = ver.getValidator("user");
 
         if (Object.prototype.toString.call(value) === '[object Array]') {
@@ -27,8 +27,10 @@ module.exports = function(ver) {
     });
 
     ver.get("users", {
-        request: "empty-body",
-        response: "user-list",
+        validate: {
+            request: "empty-body",
+            response: "user-list",
+        },
         desc: "List our all users"
     }, function(req, res) {
         res.json([{
