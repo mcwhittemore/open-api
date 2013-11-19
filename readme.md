@@ -22,10 +22,17 @@ var v2 = api.version({
 v1.addValidator(
 	"data-validator-name",
 	"desc for docs",
-	"example for docs", 
 	function(value){ 
 		return value=="is valid";
 	}
+);
+
+v1.addValidator(
+    "data-validator-with file stream",
+    fs.createReadStream("path/to/file.md", {encoding:"utf8"}),
+    function(value){ 
+        return value=="is valid";
+    }
 );
 ```
 
@@ -45,6 +52,14 @@ v1.get("route-path", opts, function(req, res){
 });
 
 v2.get("route-path", {discontinued:true});
+```
+
+## Middleware run before a versions routes
+
+```
+ver.use(function(req, res, next){
+    next();
+});
 ```
 
 ## Example App.js
