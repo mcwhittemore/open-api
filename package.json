@@ -1,6 +1,6 @@
 {
   "name": "open-api",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "devDependencies": {
     "node-hooks": "0.0.15",
     "dont-commit-conflicts.hks": "0.0.0",
