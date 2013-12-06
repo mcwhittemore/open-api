@@ -62,6 +62,14 @@ ver.use(function(req, res, next){
 });
 ```
 
+## Middleware run before version detection
+
+```
+api.before(function(req, res, next){
+    req.user = "Robert Frost";
+    next();
+});
+
 ## Example App.js
 
 ```
