@@ -26,6 +26,28 @@ module.exports = function(apiOpts) {
     api.use(connect.cookieParser());
     api.use(connect.static(apiOpts.publicFolder));
 
+    var before = [];
+
+    api.before = function(middleware) {
+        before.push(middleware);
+    }
+
+    api.use(function(req, res, next) {
+
+        var middleware = function(i) {
+            if (i < before.length) {
+                before[i](req, res, function() {
+                    middleware(i + 1);
+                });
+            } else {
+                next();
+            }
+        }
+
+        middleware(0);
+
+    });
+
     /** =========================== ADD PATH, MIMETYPE, QUERY ============================ **/
 
     api.use(function(req, res, next) {
