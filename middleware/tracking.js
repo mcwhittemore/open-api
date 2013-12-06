@@ -8,7 +8,7 @@ module.exports = function(request, response, doTrack) {
     }
 
     return function(req, res, next) {
-
+        res.loadSize = 0;
         var end = res.end;
         res.end = function() {
             end.apply(res, arguments);
