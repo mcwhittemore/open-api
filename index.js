@@ -194,3 +194,7 @@ module.exports = function(apiOpts) {
 
     return api;
 }
+
+module.exports.middleware = {
+    tracking: require("./middleware/tracking")
+}
