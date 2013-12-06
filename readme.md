@@ -123,3 +123,22 @@ v3.get("foo", {discontinued:true});
 var http = require("http");
 http.createServer(api).listen(3000);
 ```
+
+## Baked In Middleware
+
+### Tracking
+
+```
+var openApi = require("open-api");
+var api = openApi();
+api.before(openApi.middleware.tracking(function(req, res){
+    console.log("REQUEST TO TRACK", req.trackId);
+}, function(req, res){
+    console.log("REPONSE TO TRACK", req.trackId);
+}, function(req){
+    //to track or not to track
+    //return ture or false
+    return req.url.match(/^\/$|^\/docs/) == null; //default
+}));
+```
+
