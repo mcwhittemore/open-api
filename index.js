@@ -135,6 +135,7 @@ module.exports = function(apiOpts) {
 
         methods.forEach(function(name) {
             routes[name].addRoute("/" + ver.name + "/*", function(req, res, next) {
+                req.version = ver.name;
                 if (req.mimetype == "default") {
                     req.mimetype = "json";
                 }
