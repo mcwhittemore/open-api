@@ -7,21 +7,6 @@
 	<% for(var i=0; i<methodList.length; i++){ %>
 		<% var details = methods[methodList[i]]; %>
 		<h2> <%- methodList[i].toUpperCase() %> <small>HTTP METHOD</small></h2>
-		<p>  <%- details.desc %> </p>
-	    
-	    <% if(details.params && details.params.name!="auto-pass"){ %>
-	    	<h3> URL Parameters </h3>
-    		<div> <%- details.params.desc %> </div>
-	    <% } %>
-
-	    <% if(details.request.name!="auto-pass"){ %>
-			<h3> Request </h3>
-			<div> <%- details.request.desc %> </div>
-	    <% } %>
-
-    	<% if(details.response && details.response.name!="auto-pass"){ %>
-	    	<h3> Response </h3>
-    		<div> <%- details.response.desc %> </div>
-	    <% } %>
+		<p>  <%- details %> </p>
 	<% } %>
 </div>
