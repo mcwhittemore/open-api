@@ -18,7 +18,7 @@ module.exports = function(){
     }
 
     setTimeout(function(){
-        merger.apply(null, versions);
+        merger(versions);
         
         for(var i=0; i<versions.length; i++){
             var routes = Object.keys(versions[i].routes);
