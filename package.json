@@ -1,6 +1,6 @@
 {
   "name": "open-api",
-  "version": "0.2.2",
+  "version": "2.0.0",
   "devDependencies": {
     "mocha": "1.13.0"
   },
@@ -10,14 +10,11 @@
     "test": "test"
   },
   "dependencies": {
-    "context-error": "0.0.1",
     "ejs-list-render": "0.0.0",
     "express": "^4.10.6",
     "fn-docs": "^0.1.0",
     "marked": "~0.2.10",
     "methods": "~0.1.0",
-    "routes": "~0.2.0",
-    "uuid": "~1.4.1"
   },
   "scripts": {
     "test": "mocha"
@@ -31,7 +28,8 @@
     "connect",
     "deprecation",
     "versioning",
-    "express"
+    "express",
+    "docs"
   ],
   "author": "Matthew Chase Whittemore <mcwhittemore@gmail.com>",
   "license": "BSD-2-Clause",
